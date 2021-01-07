@@ -1,5 +1,6 @@
 # RISC-V ELF psABI specification
 
+
 ## Table of Contents
 1. [Register Convention](#register-convention)
 	* [Integer Register Convention](#integer-register-convention)
@@ -33,6 +34,7 @@
 	* [Linux-specific C type representations](#linux-c-type-representations)
 7. [Terms and definions](#terms-definitions)
 
+
 ## Copyright and license information
 
 This RISC-V ELF psABI specification document is
@@ -51,6 +53,7 @@ This RISC-V ELF psABI specification document is
 It is licensed under the Creative Commons Attribution 4.0 International
 License (CC-BY 4.0).  The full license text is available at
 https://creativecommons.org/licenses/by/4.0/.
+
 
 # <a name=register-convention></a> Register Convention
 
@@ -91,8 +94,12 @@ The Floating-Point Control and Status Register (fcsr) must have thread storage
 duration in accordance with C11 section 7.6 "Floating-point environment
 <fenv.h>".
 
+
 # <a name=procedure-calling-convention></a> Procedure Calling Convention
+
+
 ## <a name=integer-calling-convention></a> Integer Calling Convention
+
 The base integer calling convention provides eight argument registers,
 a0-a7, the first two of which are also used to return values.
 
@@ -188,6 +195,7 @@ No floating-point registers, if present, are preserved across calls. (This
 property changes when the integer calling convention is augmented by the 
 hardware floating-point calling convention.)
 
+
 ## <a name=hardware-floating-point-calling-convention></a> Hardware Floating-point Calling Convention
 
 The hardware floating-point calling convention adds eight floating-point
@@ -251,6 +259,7 @@ type would be passed.
 Floating-point registers fs0-fs11 shall be preserved across procedure calls,
 provided they hold values no more than FLEN bits wide.
 
+
 ## <a name=ilp32e-calling-convention></a> ILP32E Calling Convention
 
 The ILP32E calling convention is designed to be usable with the RV32E ISA. This
@@ -266,6 +275,7 @@ these registers are considered temporaries.
 The ILP32E calling convention is not compatible with ISAs that have registers
 that require load and store alignments of more than 32 bits. In particular, this
 calling convention must not be used with the D ISA extension.
+
 
 ## <a name=named-abis></a> Named ABIs
 
@@ -307,6 +317,7 @@ operating mode.
 The \*F ABIs require the \*F ISA extension, the \*D ABIs require the \*D ISA
 extension, and the LP64Q ABI requires the Q ISA extension.
 
+
 ## <a name=default-abis></a> Default ABIs
 
 While various different ABIs are technically possible, for software
@@ -321,6 +332,7 @@ default ABIs for specific architectures:
 
   * **on RV32G**: [ILP32D](#abi-ilp32d)
 
+
 ## <a name=code-models /> Code models
 
 The RISC-V architecture constrains the addressing of positions in the
@@ -331,6 +343,7 @@ via its literal.  And, when not, other data structures are used to help the
 code to address the memory space.  The coding conventions governing their use
 are known as code models.
 
+
 ### Small
 
 The small code model, or `medlow`, allows the code to address the whole RV32
@@ -339,6 +352,7 @@ By using the instructions `lui` and `ld` or `st`, when referring to an object, o
 `addi`, when calculating an address literal, for example,
 a 32-bit address literal can be produced.
 This code model is not position independent.
+
 
 ### Medium
 
@@ -350,6 +364,7 @@ a signed 32-bit offset, relative to the value of the `pc` register,
 can be produced.
 This code model is position independent.
 
+
 ### Compact
 
 The compact code model allows the code to address the whole 64-bit address space,
@@ -360,7 +375,10 @@ offset, relative to the value of the `gp` register, can be produced, referring
 to address literals in the GOT.  This code model is position independent.
 Does not apply to the ILP32 ABIs.
 
+
 # <a name=c-types></a> C type details
+
+
 ## <a name=c-type-sizes></a> C type sizes and alignments
 
 There are two conventions for C type sizes and alignments.
@@ -411,6 +429,7 @@ The alignment of `max_align_t` is 16.
 Structs and unions are aligned to the alignment of their most strictly aligned
 member. The size of any object is a multiple of its alignment.
 
+
 ## <a name=c-type-representation></a> C type representations
 
 `char` is unsigned.
@@ -424,6 +443,7 @@ A null pointer (for all types) has the value zero.
 corresponding real type (`float`, `double`, or `long double`), with the first
 member holding the real part and the second member holding the imaginary part.
 
+
 ## <a name=va-list-va-start-and-va-arg></a> va_list, va_start, and va_arg
 
 The `va_list` type is `void*`. A callee with variadic arguments is responsible
@@ -434,7 +454,9 @@ of the vararg save area.  The `va_arg` macro will increment its `va_list`
 argument according to the size of the given type, taking into account the
 rules about 2✕XLEN aligned arguments being passed in "aligned" register pairs.
 
+
 # <a name=elf-object-file></a> ELF Object Files
+
 
 ## <a name=file-header></a> File Header
 
@@ -486,11 +508,15 @@ rules about 2✕XLEN aligned arguments being passed in "aligned" register pairs.
   future versions of this specification, they shall not be set by standard
   software.
 
+
 ## <a name=sections></a>Sections
+
 
 ## <a name=string-tables></a>String Tables
 
+
 ## <a name=symbol-table></a>Symbol Table
+
 
 ## <a name=relocations></a>Relocations
 
@@ -525,8 +551,8 @@ Enum | ELF Reloc Type        | Description                     | Field       | C
 11   | R_RISCV_TLS_TPREL64   | TLS relocation                  | _word64_    | S + A + TLS + S_TLS_OFFSET - TLS_DTV_OFFSET
 16   | R_RISCV_BRANCH        | PC-relative branch              | _B-Type_    | S + A - P
 17   | R_RISCV_JAL           | PC-relative jump                | _J-Type_    | S + A - P
-18   | R_RISCV_CALL          | PC-relative call                | _J-Type_    | S + A - P   | Macros `call`, `tail`
-19   | R_RISCV_CALL_PLT      | PC-relative call (PLT)          | _J-Type_    | S + A - P   | Macros `call`, `tail` (PIC)
+18   | R_RISCV_CALL          | PC-relative call                | _UJ-Type_   | S + A - P   | Macros `call`, `tail`
+19   | R_RISCV_CALL_PLT      | PC-relative call (PLT)          | _UJ-Type_   | S + A - P   | Macros `call`, `tail` (PIC)
 20   | R_RISCV_GOT_HI20      | PC-relative GOT reference       | _U-Type_    | G + A - P   | `%got_pcrel_hi(symbol)`
 21   | R_RISCV_TLS_GOT_HI20  | PC-relative TLS IE GOT offset   | _U-Type_    |             | Macro `la.tls.ie`
 22   | R_RISCV_TLS_GD_HI20   | PC-relative TLS GD reference    | _U-Type_    |             | Macro `la.tls.gd`
@@ -614,6 +640,7 @@ _I-Type_    | Specifies a field as the immediate field in an I-type instruction
 _S-Type_    | Specifies a field as the immediate field in an S-type instruction
 _U-Type_    | Specifies a field as the immediate field in an U-type instruction
 _J-Type_    | Specifies a field as the immediate field in a J-type instruction
+_UJ-Type_   | Specifies a field as the immediate field in an U-type and a J-type instruction
 
 ### Absolute Addresses
 
@@ -653,6 +680,7 @@ relocation. The following assembly show loading a gp-relative address:
 
 This relies on the value of `__global_pointer$` being loaded into `gp` (aka
 `x3`). This can be used by linker relaxation to delete the `lui` instruction.
+
 
 ### Global Offset Table
 
@@ -958,13 +986,18 @@ typedef struct
 } tls_index;
 ```
 
+
 ## <a name=program-header-table></a>Program Header Table
+
 
 ## <a name=note-sections></a>Note Sections
 
+
 ## <a name=dynamic-table></a>Dynamic Table
 
+
 ## <a name=hash-table></a>Hash Table
+
 
 # <a name=dwarf></a>DWARF
 
@@ -989,6 +1022,7 @@ There space for 4096 CSRs.  Each CSR is assigned a DWARF register
 number corresponding to its CSR number given in **Volume II: Privileged
 Architecture** of **The RISC-V Instruction Set Manual** plus 4096.
 
+
 # <a name=linux-abi></a> Linux-specific ABI
 
 **This section of the RISC-V ELF psABI specification only applies to Linux-based
@@ -997,6 +1031,7 @@ systems.**
 In order to ensure compatibility between different implementations of the C
 library for Linux, we provide some extra definitions which only apply on those
 systems. These are noted in this section.
+
 
 ## <a name=linux-c-type-sizes></a> Linux-specific C type sizes and alignments
 
@@ -1008,12 +1043,14 @@ Type        | Size (Bytes)  | Alignment (Bytes)
 wchar_t     |  4            |  4
 wint_t      |  4            |  4
 
+
 ## <a name=linux-c-type-representations></a> Linux-specific C type representations
 
 The following definitions apply for all ABIs defined in this document. Here
 there is no differentiation between ILP32 and LP64 abis.
 
 `wchar_t` is signed.  `wint_t` is unsigned.
+
 
 # <a name=terms-definitions></a> Terms and Definitions
 
