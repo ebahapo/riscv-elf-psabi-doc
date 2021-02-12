@@ -640,7 +640,7 @@ _I-Type_    | Specifies a field as the immediate field in an I-type instruction
 _S-Type_    | Specifies a field as the immediate field in an S-type instruction
 _U-Type_    | Specifies a field as the immediate field in an U-type instruction
 _J-Type_    | Specifies a field as the immediate field in a J-type instruction
-_U+J-Type_  | Specifies a field as the immediate field in an U-type and a J-type instruction
+_U+J-Type_  | Specifies a field as the immediate fields in a U-type and J-type instruction pair
 
 ### Absolute Addresses
 
